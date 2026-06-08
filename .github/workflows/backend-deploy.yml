@@ -38,15 +38,15 @@ jobs:
       - name: Validate Render secret
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}" ]; then
-            echo "❌ Missing secret RENDER_DEPLOY_HOOK_BACKEND"
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "❌ Missing secret RENDER_DEPLOY_HOOK"
             exit 1
           fi
 
       - name: Deploy to Render
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
-          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
           curl "$RENDER_DEPLOY_HOOK"
           echo "✅ Deployment hook triggered"

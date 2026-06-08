@@ -21,8 +21,8 @@ jobs:
       - name: Validate required secrets
         if: github.event_name == 'push'
         run: |
-          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}" ]; then
-            echo "❌ Missing secret RENDER_DEPLOY_HOOK_BACKEND"
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "❌ Missing secret RENDER_DEPLOY_HOOK"
             exit 1
           fi
           if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
