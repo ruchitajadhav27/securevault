@@ -14,7 +14,26 @@ if (missingEnv.length > 0) {
 }
 
 const app = express();
-app.use(cors());
+
+// Configure CORS for both development and production
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'https://securevault-weld.vercel.app',
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/auth', authRoutes);
