@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "vite"
+    "start": "vite",
+    "preview": "vite preview",
+    "test": "echo 'No tests configured yet. Add your test suite here.'"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.34.12",

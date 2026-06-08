@@ -7,7 +7,9 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "build": "echo 'Backend is ready to start'",
+    "test": "echo 'No tests configured yet. Add your test suite here.'"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

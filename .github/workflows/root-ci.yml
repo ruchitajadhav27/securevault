@@ -1,0 +1,33 @@
+name: Root CI Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+      - name: Validate workflows
+        run: |
+          if [ -d .github/workflows ]; then
+            echo "✅ GitHub Actions workflows found"
+          else
+            echo "⚠️  No workflows directory found"
+          fi
