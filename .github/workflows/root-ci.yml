@@ -15,13 +15,35 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Validate required secrets
+        if: github.event_name == 'push'
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}" ]; then
+            echo "❌ Missing secret RENDER_DEPLOY_HOOK_BACKEND"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "❌ Missing secret VERCEL_TOKEN"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
+            echo "❌ Missing secret VERCEL_ORG_ID"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "❌ Missing secret VERCEL_PROJECT_ID"
+            exit 1
+          fi
 
       - name: Check for secrets
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+          base: ${{ github.event.before != '0000000000000000000000000000000000000000' && github.event.before || github.event.pull_request.base.sha }}
+          head: ${{ github.sha }}
           extra_args: --only-verified
 
       - name: Validate workflows

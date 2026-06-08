@@ -35,14 +35,18 @@ jobs:
         run: |
           npm run start --dry-run || npm list
 
+      - name: Validate Render secret
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}" ]; then
+            echo "❌ Missing secret RENDER_DEPLOY_HOOK_BACKEND"
+            exit 1
+          fi
+
       - name: Deploy to Render
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}
         run: |
-          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
-            echo "⚠️  RENDER_DEPLOY_HOOK not set. Skipping deployment."
-            exit 0
-          fi
           curl "$RENDER_DEPLOY_HOOK"
           echo "✅ Deployment hook triggered"
